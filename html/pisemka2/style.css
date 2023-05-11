@@ -1,0 +1,78 @@
+body {
+    padding: 0;
+	margin: 0;
+	font-family: Verdana, sans-serif;
+	background-color: #23272f;
+}
+
+h1 {
+	margin-top: 0;
+    text-align: center;
+}
+
+.main{
+    position: relative;
+	text-align: justify;
+	width: 55%;
+	margin: 10vh auto 0;
+	padding: 2em;
+	border-radius: 1.4em;
+	border: 1px solid #ddd;
+	background-color: #ffffff;
+    box-shadow: .2em .2em .5em #202020;
+}
+
+.fotka{
+	width: 10em;
+	border-radius: 1.4em;
+	float: left;
+	margin: 0px 2em 0px 0px;
+}
+
+
+.footer{
+    position: relative;
+	padding: .6em;
+	text-align: center;
+	background-color: #138b5e;
+	color: #fff;
+	border-radius: .7em;
+    font-size: .8em;
+}
+
+.footer a {
+	color: black;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.footer a:hover {
+	text-decoration: underline;
+}
+
+.help {
+    position: absolute;
+    color: white;
+}
+
+.help a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+.help a:hover {
+    text-decoration: underline;
+}
+
+body>.help {
+    text-align: center;
+    left: 0;
+    top: 1em;
+    width: 100%;
+}
+
+.text>.help {
+    text-align: center;
+    top: 100%;
+    width: 100%;
+}

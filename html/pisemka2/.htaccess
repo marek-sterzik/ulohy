@@ -1,0 +1,8 @@
+AuthType Basic
+AuthName "Authentication Required"
+AuthUserFile /home/marek/www/marvin.milimetr.org/htpasswd-pisemky
+Require valid-user
+
+<Files ~ "\.(txt|jpg)$">
+    Satisfy any
+</Files>
