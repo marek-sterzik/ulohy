@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="js/script.js" type="text/javascript"></script>
+</head>
+<body>
+    
+
+    <div class="box">
+
+        <h1>Progress bar</h1>
+
+        <div class="progress-button">
+            <button id="start">Klikni na mě</button>
+
+            <div class="progress-bar">
+                <div id="bar" style="width: 50%"><div></div></div>
+                <div id="percent">50%</div>
+            </div>
+    
+        </div>
+
+        <img src="img/img.gif" alt="image" id="gif">
+    </div>
+    <div class="box">
+        <h1>Zadání</h1>
+        <ul>
+            <li>
+                Stáhněte si tuto stránku a všechny potřebné soubory k sobě do počítače.
+            </li>
+            <li>
+                Vytvořte kód v JavaScriptu, který po kliknutí na tlačítko <button class="intext">Klikni na mě</button> (<code>button#start</code>) spustí animaci příslušného "progress baru"
+                (<code>div#progress-bar</code>) od 0 do 100%.
+                Když se progress bar vyšplhá až do 100%, tak by kód měl zobrazit obrázek (<code>img#gif</code>).
+            </li>
+            <li>
+                Příslušný JavaScript propojte se stránkou tak, aby stránka s JavaScriptem vytvořili funkční celek.
+            </li>
+            <li>
+                U progress baru je potřeba měnit vždy synchronizovaně šířku ukazatele průběhu (<code>div#bar</code>) a textu ukazujícího procenta (<code>div#percent</code>).
+                Průběh progrese nemusí být plynulý, může se pohybovat třeba po jednotlivých procentech nebo třeba i po 5% skocích. Minimální počet skoků je ale 10.
+            </li>
+            <li>
+                Progress bar musí být inicializován tak, aby na samém počátku ukazoval 0%. Současné nastavení na 50% je jenom ilustrační, aby šlo vidět, jak je celý progress
+                bar designován.
+            </li>
+            <li>
+                Kód musí být ošetřen proti vícenásobnému kliknutí, tj. vícenásobné kliknutí nesmí kód rozbít. Je na vašem uvážení, jak se v takovém případě aplikace zachová.
+            </li>
+            <li>
+                Kód NEMUSÍ předpokládat vícenásobné použití na jedné stránce.
+            </li>
+            <li>
+                Řešení má používat knihovnu JQuery, kterou je potřeba taktéž správně zprovoznit.
+            </li>
+            <li>
+                Všechny soubory vašeho řešení zabalte do zib balíčku a odevzdejte do aplikace Teams jako řešení.
+            </li>
+            <li>
+                Můžete používat veškerou dostupnou dokumentaci a můžete se ptát na konkrétní dotazy i učitele. Musíte ale práci vypracovat SAMOSTATNĚ.
+            </li>
+            <li>
+                Můžete si také vyzkoušet <a href="reference.html">referenční implementaci</a>. Nesmíte z ní však žádné kusy využít.
+            </li>
+
+        </ul>
+        <h1>Užitečné JQuery příkazy</h1>
+        <ul>
+            <li>
+                <code>$(selector).css("visibility", "visible")</code> - zobrazí element daný selektorem <code>selector</code> (určeno zejména pro zobrazení
+                obrázku v tomto příkladu, ve většině jiných případů případů se hodí použít trochu odlišný <code>$(selector).show()</code>, který ale pro obrázek
+                v tomto příkladu nelze dobře použít.
+            </li>
+            <li>
+                <code>$(selector).css("visibility", "hidden")</code> - skryje element daný selektorem <code>selector</code> (určeno zejména pro skrytí
+                obrázku v tomto příkladu, ve většině jiných případů případů se hodí použít <code>$(selector).hide()</code>, který v tomto příkladu ale není vhodný.
+            </li>
+            <li>
+                <code>$(selector).css("width", percent + "%")</code> - nastaví šířku elementu v procentech (<code>percent</code> udává požadovaný počet procent)
+            </li>
+            <li>
+                <code>$(selector).text(text)</code> - nastaví textový obsah elementu <code>selector</code> na hodnotu <code>text</code>
+            </li>
+            <li>
+                <code>$(selector).click(fn)</code> - nastaví obsluhu události kliknutí na element daný selektorem <code>selector</code> na funkci <code>fn</code>
+            </li>
+    </div>
+</body>
+</html>

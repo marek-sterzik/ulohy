@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle menu</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="js/rotationlib.js"></script>
+    <script src="js/script.js"></script>
+</head>
+
+<body>
+
+    <div class="box">
+
+        <div class="circle">
+            <span class="lcircle"><a href="#" class="link active" data-rotation="0">A</a></span>
+            <span class="lcircle"><a href="#" class="link" data-rotation="300">B</a></span>
+            <span class="lcircle"><a href="#" class="link" data-rotation="240">C</a></span>
+            <span class="lcircle"><a href="#" class="link" data-rotation="180">D</a></span>
+            <span class="lcircle"><a href="#" class="link" data-rotation="120">E</a></span>
+            <span class="lcircle"><a href="#" class="link" data-rotation="60">F</a></span>
+        </div>
+
+    </div>
+
+    <div class="text-box">
+
+        <h2>Zadání</h2>
+        <ul>
+            <li>
+                <strong>Pozorně si přečtěte celé zadání.</strong>
+            </li>
+            <li>
+                Vytvořte javascriptový kód pro tuto stránku, který bude umět animovat otočné kolo podobným způsobem jako současná referenční implementace.
+            </li>
+            <li>
+                Celé řešení by mělo využívat knihovnu jQuery. Nativní API prohlížeče by se nemělo používat tam, kde existuje jQuery ekvivalent.
+            </li>
+            <li>
+                Po kliknutí na některý z odkazů A-F se má kolo PLYNULE pootočit do pozice, kdy příslušný link bude NAHOŘE.
+            </li>
+            <li>
+                Link, který je právě nahoře má mít třídu <code>active</code>. Ostatní linky třídu <code>active</code> mít nemají.
+            </li>
+            <li>
+                Celý kód musí být ošetřen proti vícenásobnému kliknutí.
+            </li>
+            <li>
+                Je potřeba vytvořit vlastní kód. Kopírování cizího kódu (ať už od spolužáka nebo z Internetu) je zakázáno.
+            </li>
+            <li>
+                Každý element třídy <code>link</code> má ve speciálním atributu <code>data-rotation</code> uvedenou hodnotu pootočení celého kola, aby byl
+                nahoře. Hodnota je uvedena ve stupních.
+            </li>
+            <li>
+                Pro správné otočení kolem na přesně stanovený úhel je potřeba udělat dvě věci:
+                <ol>
+                    <li>
+                        Otočit celým elementem <code>div.circle</code> na příslušný úhel.
+                    </li>
+                    <li>
+                        Otočit všemi elementy <code>a.link</code> na úhel OPAČNÝ, aby písmenka byla vždy natočená správným směrem.
+                    </li>
+                </ol>
+            </li>
+            <li>
+                Lze přitom použít (a je záhodno použít!) funkce z přiložené javascriptové knihovny <a href="js/rotationlib.js" target="_blank">rotationlib.js</a>. V ní najdete dvě funkce:
+                <ol>
+                    <li>
+                        Funkci <code>animate()</code>, která zvládne realizovat plynulou animaci libovolného parametru.
+                    </li>
+                    <li>
+                        Funkci <code>calculateRotationInterval()</code>, která vypočítá pro konkrétní situaci odkud kam se má animovat parametr rotace. Funkce zejména řeší,
+                        zda je kratší rotovat po směru hodinových ručiček nebo proti směru hodinových ručiček.
+                    </li>
+                </ol>
+                Přesné použití obou funkcí je zdokumentováno jako komentář k příslušným funkcím přímo v souboru <a href="js/rotationlib.js" target="_blank">rotationlib.js</a>.
+            </li>
+            <li>
+                <strong>Hotovou práci zabalte do archivu a odevzdejte v aplikaci Teams do konce hodiny.</strong>
+            </li>
+        </ul>
+        <h2>Pokyny</h2>
+        <ul>
+            <li>
+                Pracujte samostatně.
+            </li>
+            <li>
+                Můžete používat veškerou dokumentaci z Internetu.
+            </li>
+            <li>
+                Můžete se poradit s učitelem i spolužákem, ale nesmíte od spolužáků opisovat kód. Kódem spolužáků byste se neměli ani inspirovat.
+            </li>
+            <li>
+                Je taktéž zakázáno používat hotové kusy kódu z Internetu, kromě případů, kdy je to zadáním vysloveně dovoleno. V této práci je vysloveně dovoleno použít knihovnu jQuery
+                a kód <a href="js/rotationlib.js" target="_blank">rotationlib.js</a>, který je přibalen k této aplikaci.
+            </li>
+        </ul>
+        <h2>Užitečné informace</h2>
+        <ul>
+            <li>
+                Celá úloha byla vymyšlena tak, aby hodnoty úhlů fungovaly ve stupních. Lze samozřejmě pracovat i s jinými jednotkami (radiány, turny) ale může pak velmi snadno
+                dojít ke zmatení. Nechcete-li mít problémy, počítejte s úhlem všude zásadně ve stupních.
+            </li>
+            <li>
+                Otočit element na konkrétní úhel lze pomocí volání: <pre>$(element).css("transform", "rotate(120deg)")</pre> (toto volání pootočí element o 120°)
+            </li>
+            <li>
+                Přečíst hodnotu atributu <code>data-rotation</code> tak, aby byla interpretována jako číslo lze takto:
+                <pre>parseFloat($(element).attr("data-rotation"))</pre>
+            </li>
+            <li>
+                    Přidat třídu k elementu lze pomocí: <pre>$(element).addClass("active")</pre>
+            </li>
+            <li>
+                    Odebrat třídu z elementu lze pomocí: <pre>$(element).removeClass("active")</pre>
+            </li>
+        </ul>
+
+    </div>
+
+</body>
+
+</html>

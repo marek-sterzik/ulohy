@@ -1,0 +1,25 @@
+#!/bin/bash
+
+uglifyjs="$(dirname $(which "$0"))/../node_modules/uglify-js/bin/uglifyjs"
+
+binugly() {
+    base64 | sed ':a; N; $!ba; s/\n//g;s/[[:space:]]//g;s/^/eval(btoa("/;s/$/"))/'
+}
+
+uglify() {
+    "$uglifyjs" --rename | binugly | binugly
+}
+
+if [ "$#" == 0 ]; then
+    uglify
+else
+    while [ "$#" -gt 0 ]; do
+        src="$1"
+        if echo "$src" | grep -q '\.js$'; then
+            dst="`echo "$src" | sed 's/\.js$/.ugly.js'`"
+        else
+            echo "Error: file does not have a .js extension: $src" 1>&2
+        fi
+        cat "$src" | uglify > "$dst"
+    done
+fi 

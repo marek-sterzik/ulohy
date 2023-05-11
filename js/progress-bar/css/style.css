@@ -1,0 +1,103 @@
+* {margin: 0; padding: 0;}
+
+body{
+    background-color: #1b1e24;
+    font-family: Arial, sans-serif;
+}
+
+a {
+    color: inherit;
+    font-weight: bold;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+.box{
+    background-color: #23272f;
+    width: 50vw;
+    margin: 2em auto;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+    border-radius: 10px;
+}
+.box>ul{
+    padding: 1em;
+    text-align: left;
+}
+
+.box>ul li {
+    margin: .5em 0;
+    text-align: justify;
+}
+
+code {
+    padding: .1em .2em;
+    margin: .2em;
+    background-color: #3b3e44;
+    border-radius: .2em;
+}
+
+.progress-button{
+    display: flex;
+    justify-content: center;
+    margin: 2% auto;
+}
+
+button{
+    display: block;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgb(38, 131, 252);
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    height: 30px;
+    width: 200px;
+}
+
+button.intext {
+    display: inline;
+    width: auto;
+    padding: 0 2em;
+    height: 2em;
+    cursor: default;
+}
+
+.progress-bar {
+	background-color: #fafafa;
+	border-radius: 1em;
+	position: relative;
+	height: 2em;
+	width: 500px;
+    color: #000;
+    margin-left: 10px;
+}
+
+#percent {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: .5em 0;
+}
+
+#bar {
+    height: 2em;
+    overflow: hidden;
+}
+
+#bar>div{
+    height: 2em;
+    width: 500px;
+	border-radius: 1em;
+    background: linear-gradient(to left, #068f5a, #10aa5a);
+}
+
+#gif{
+    border-radius: 10px;
+    visibility: hidden;
+}
