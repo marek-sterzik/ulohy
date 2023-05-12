@@ -1,0 +1,29 @@
+
+table.snakeboard {
+    border: 1px solid black;
+    margin: 1em auto;
+    border-collapse: collapse;
+}
+
+table.snakeboard td {
+    width: 1em;
+    height: 1em;
+    border: 1px solid #c0c0c0;
+    text-align: center;
+}
+
+table.snakeboard td.snake {
+    background-color: brown;
+}
+
+table.snakeboard td.empty {
+    background-color: white;
+}
+
+table.snakeboard td.prey {
+    color: red;
+}
+
+table.snakeboard td.wall {
+    background-color: black;
+}
