@@ -35,6 +35,123 @@ function setCellState(board, x, y, state, growFactor)
     }
 }
 
+function parseWallCommand(wallsCode)
+{
+    wallsCode = wallsCode.toUpperCase().replace(/\s+/,'')
+    var match = wallsCode.match(/^<([0-9]+),([0-9]+)>(.*)$/)
+    if (match) {
+        return {
+            "command": "<>",
+            "point": {"x": parseInt(match[1]),"y": parseInt(match[2])},
+            "rest": match[3],
+        }
+    }
+    match = wallsCode.match(/^(.)(.*)$/)
+    if (match) {
+        return {
+            "command": match[1],
+            "point": null,
+            "rest": match[2],
+        }
+    }
+
+    return {
+        "command": "",
+        "point": null,
+        "rest": "",
+    }
+}
+
+function drawWallPoint(board, point)
+{
+    if (point.x >= 0 && point.y >= 0 && point.x < board.x && point.y < board.y) {
+        setCellState(board, point.x, point.y, "wall", 0)
+    }
+}
+
+function* generateValues(from, to)
+{
+    if (to >= from) {
+        for (var i = from; i <= to; i++) {
+            yield i
+        }
+    } else {
+        for (var i = from; i >= to; i--) {
+            yield i
+        }
+    }
+}
+
+function drawWallLine(board, point1, point2)
+{
+    if (Math.abs(point1.x - point2.x) > Math.abs(point1.y - point2.y)) {
+        for (var x of generateValues(point1.x, point2.x)) {
+            y = point1.y + Math.round((point2.y - point1.y)*(x - point1.x)/(point2.x - point1.x))
+            drawWallPoint(board, {"x": x, "y": y})
+        }
+    } else if (Math.abs(point1.y - point2.y) > 0) {
+        for (var y of generateValues(point1.y, point2.y)) {
+            x = point1.x + Math.round((point2.x - point1.x)*(y - point1.y)/(point2.y - point1.y))
+            drawWallPoint(board, {"x": x, "y": y})
+        }
+    } else {
+        drawWallPoint(board, point1)
+    }
+}
+
+function drawWalls(board, wallsCode)
+{
+    var lastPoint = {"x": 0, "y": 0}
+    var point = lastPoint
+    var draw = false
+    while (wallsCode != "") {
+        var invalid = false
+        var moveLastPoint = false
+        parsed = parseWallCommand(wallsCode)
+        wallsCode = parsed.rest
+        switch (parsed.command) {
+        case 'L':
+            point.x--
+            break
+        case 'R':
+            point.x++
+            break
+        case 'U':
+            point.y--
+            break
+        case 'D':
+            point.y++
+            break
+        case '+':
+            draw = true
+            break
+        case '-':
+            draw = false
+            break;
+        case 'X':
+            drawWallPoint(board, point)
+            moveLastPoint = true
+            break;
+        case '<>':
+            point = parsed.point
+            moveLastPoint = true
+            break
+        default:
+            invalid = true
+            break;
+        }
+        if (invalid) {
+            continue
+        }
+        if (draw) {
+            drawWallLine(board, lastPoint, point)
+        }
+        if (draw || moveLastPoint) {
+            lastPoint = point
+        }
+    }
+}
+
 function rand(n)
 {
     return Math.floor(Math.random() * 1000000000) % n;
@@ -85,6 +202,10 @@ function setupTemplateDefaults(template)
     if (! ("flipDirections" in template)) {
         template.flipDirections = false
     }
+
+    if (! ("walls" in template)) {
+        template.walls = ""
+    }
     return template
 }
 
@@ -121,6 +242,8 @@ function createSnakeboard(element, template)
         element.append(row)
         state.board.push(boardRow)
     }
+
+    drawWalls(state, template.walls)
 
     for (var coords of state.snake) {
         setCellState(state, coords.x, coords.y, "snake", 0)
@@ -289,7 +412,7 @@ function getDirection(keycode)
 }
 
 $(document).ready(function() {
-    template = {"width": 30, "height": 30, "links": links.projectivePlane, "flipDirections": true}
+    template = {"width": 30, "height": 30, "links": links.projectivePlane, "flipDirections": true, "walls": "<4,4>+RRRRRR-X<10,10>X"}
     var state = createSnakeboard($('table.snakeboard'), template)
     $(document).on("keydown", function(ev){
         if (keyPress(state, ev.which)) {
