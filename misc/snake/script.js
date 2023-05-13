@@ -10,6 +10,18 @@ const direction = {
     "down": {"x": 0, "y": 1},
 }
 
+const links = {
+    "border": {"v": "none", "h": "none"},
+    "mobiusStrip": {"v": "none", "h": "flipped"},
+    "kleinBottle": {"v": "normal", "h": "flipped"},
+    "projectivePlane": {"v": "flipped", "h": "flipped"},
+}
+
+function flipDirection(dir, hFlip, vFlip)
+{
+    return {"x": dir.x * (hFlip ? (-1) : 1), "y": dir.y * (vFlip ? (-1) : 1)}
+}
+
 function setCellState(board, x, y, state, growFactor)
 {
     const cell = board.board[y][x]
@@ -38,24 +50,68 @@ function placeRandomPrey(board, growFactor)
     setCellState(board, x, y, "prey", growFactor)
 }
 
-function createSnakeboard(element, x, y)
+function setupTemplateDefaults(template)
 {
+    template = Object.assign({}, template)
+    const mandatoryFields = ["width", "height"]
+    for (var field of mandatoryFields) {
+        if (! (field in template)) {
+            throw "field is mandatory in snake template: " + field
+        }
+    }
+    if (! ("snakeX" in template)) {
+        template.snakeX = intdiv(template.width, 2)
+    }
+
+    if (! ("snakeY" in template)) {
+        template.snakeY = intdiv(template.height, 2)
+    }
+
+    if (! ("snakeLength" in template)) {
+        template.snakeLength = 4
+    }
+    if (template.snakeLength < 1) {
+        template.snakeLength = 1
+    }
+
+    if (! ("snakeDirection" in template)) {
+        template.snakeDirection = direction.up
+    }
+
+    if (! ("links" in template)) {
+        template.links = links.border
+    }
+
+    if (! ("flipDirections" in template)) {
+        template.flipDirections = false
+    }
+    return template
+}
+
+function createSnakeboard(element, template)
+{
+    template = setupTemplateDefaults(template)
+    console.log(template)
     var state = {
         "state": "run",
-        "snake": [{"x": intdiv(x, 2), "y": intdiv(y, 2)}],
-        "nextDirection": direction.up,
-        "prevDirection": direction.up,
+        "snake": [{"x": template.snakeX, "y": template.snakeY}],
+        "nextDirection": template.snakeDirection,
+        "prevDirection": template.snakeDirection,
         "directionStack": null,
-        "growFactor": 3,
-        "x": x,
-        "y": y,
+        "growFactor": template.snakeLength - 1,
+        "x": template.width,
+        "y": template.height,
+        "links": template.links,
+        "flipDirections": template.flipDirections,
+        "vFlip": false,
+        "hFlip": false,
         "board": []
     }
     element.html("")
-    for (i = 0; i < y; i++) {
+    for (i = 0; i < state.y; i++) {
         var row = $("<tr>")
         var boardRow = []
-        for (j = 0; j < x; j++) {
+        for (j = 0; j < state.x; j++) {
             var cell= $("<td><span></span></td>")
             var boardCell = {"type": "empty", "growFactor": 0, "el": cell}
             cell.addClass("empty")
@@ -126,10 +182,41 @@ function tickRun(board)
 {
     const snakeHead = board.snake[board.snake.length - 1]
     const nextHead = {"x": snakeHead.x + board.nextDirection.x, "y": snakeHead.y + board.nextDirection.y}
-    if (nextHead.x < 0 || nextHead.x >= board.x || nextHead.y < 0 || nextHead.y >= board.y) {
-        board.state = "crash"
-        return true
+    if (nextHead.x < 0 || nextHead.x >= board.x) {
+        if (board.links.h == "normal" || board.links.h == "flipped") {
+            nextHead.x = (board.x + nextHead.x) % board.x
+            if (board.links.h == "flipped") {
+                nextHead.y = board.y - nextHead.y - 1;
+                if (board.flipDirections) {
+                    board.vFlip = !board.vFlip
+                    if (board.directionStack !== null) {
+                        board.directionStack = flipDirection(board.directionStack, false, true)
+                    }
+                }
+            }
+        } else {
+            board.state = "crash"
+            return true
+        }
     }
+    if (nextHead.y < 0 || nextHead.y >= board.y) {
+        if (board.links.v == "normal" || board.links.v == "flipped") {
+            nextHead.y = (board.y + nextHead.y) % board.y
+            if (board.links.v == "flipped") {
+                nextHead.x = board.x - nextHead.x - 1;
+                if (board.flipDirections) {
+                    board.hFlip = !board.hFlip
+                    if (board.directionStack !== null) {
+                        board.directionStack = flipDirection(board.directionStack, true, false)
+                    }
+                }
+            }
+        } else {
+            board.state = "crash"
+            return true
+        }
+    }
+
     const nextCell = board.board[nextHead.y][nextHead.x]
     if (nextCell.type == 'wall' || nextCell.type == 'snake') {
         board.state = "crash"
@@ -170,6 +257,7 @@ function tickRun(board)
 
 function setDirection(board, dir)
 {
+    dir = flipDirection(dir, board.hFlip, board.vFlip)
     const x = board.prevDirection.x + dir.x
     const y = board.prevDirection.y + dir.y
     if (x != 0 || y != 0) {
@@ -201,7 +289,8 @@ function getDirection(keycode)
 }
 
 $(document).ready(function() {
-    var state = createSnakeboard($('table.snakeboard'), 30, 30)
+    template = {"width": 30, "height": 30, "links": links.projectivePlane, "flipDirections": true}
+    var state = createSnakeboard($('table.snakeboard'), template)
     $(document).on("keydown", function(ev){
         if (keyPress(state, ev.which)) {
             ev.preventDefault()
