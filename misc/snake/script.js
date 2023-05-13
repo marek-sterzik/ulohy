@@ -102,11 +102,12 @@ function drawWallLine(board, point1, point2)
 function drawWalls(board, wallsCode)
 {
     var lastPoint = {"x": 0, "y": 0}
-    var point = lastPoint
+    var point = Object.assign({}, lastPoint)
     var draw = false
+    var invalid, moveLastPoint
     while (wallsCode != "") {
-        var invalid = false
-        var moveLastPoint = false
+        invalid = false
+        moveLastPoint = false
         parsed = parseWallCommand(wallsCode)
         wallsCode = parsed.rest
         switch (parsed.command) {
@@ -132,6 +133,9 @@ function drawWalls(board, wallsCode)
             drawWallPoint(board, point)
             moveLastPoint = true
             break;
+        case 'M':
+            moveLastPoint = true
+            break;
         case '<>':
             point = parsed.point
             moveLastPoint = true
@@ -147,7 +151,7 @@ function drawWalls(board, wallsCode)
             drawWallLine(board, lastPoint, point)
         }
         if (draw || moveLastPoint) {
-            lastPoint = point
+            lastPoint = Object.assign({}, point)
         }
     }
 }
@@ -412,7 +416,7 @@ function getDirection(keycode)
 }
 
 $(document).ready(function() {
-    template = {"width": 30, "height": 30, "links": links.projectivePlane, "flipDirections": true, "walls": "<4,4>+RRRRRR-X<10,10>X"}
+    template = {"width": 30, "height": 30, "links": links.projectivePlane, "flipDirections": true, "walls": "<4,4>-RD+"}
     var state = createSnakeboard($('table.snakeboard'), template)
     $(document).on("keydown", function(ev){
         if (keyPress(state, ev.which)) {
