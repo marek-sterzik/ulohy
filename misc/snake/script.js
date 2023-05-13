@@ -17,9 +17,9 @@ function setCellState(board, x, y, state, growFactor)
     cell.el.removeClass().addClass(state)
     cell.growFactor = growFactor
     if (cell.growFactor > 0) {
-        cell.el.text(cell.growFactor)
+        cell.el.find("span").text(cell.growFactor)
     } else {
-        cell.el.text("")
+        cell.el.find("span").text("")
     }
 }
 
@@ -41,19 +41,22 @@ function placeRandomPrey(board, growFactor)
 function createSnakeboard(element, x, y)
 {
     var state = {
+        "state": "run",
         "snake": [{"x": intdiv(x, 2), "y": intdiv(y, 2)}],
         "nextDirection": direction.up,
         "prevDirection": direction.up,
+        "directionStack": null,
         "growFactor": 3,
         "x": x,
         "y": y,
         "board": []
     }
+    element.html("")
     for (i = 0; i < y; i++) {
         var row = $("<tr>")
         var boardRow = []
         for (j = 0; j < x; j++) {
-            var cell= $("<td>")
+            var cell= $("<td><span></span></td>")
             var boardCell = {"type": "empty", "growFactor": 0, "el": cell}
             cell.addClass("empty")
             row.append(cell)
@@ -74,21 +77,77 @@ function createSnakeboard(element, x, y)
 
 function tick(board)
 {
+    if (board.state == 'run') {
+        return tickRun(board)
+    } else if (board.state == 'done'){
+        return tickDone(board)
+    } else {
+        return tickCrash(board)
+    }
+}
+
+function tickDone(board)
+{
+    if (board.snake.length == 0) {
+        return false
+    }
+    const snakeTail = board.snake.shift()
+    setCellState(board, snakeTail.x, snakeTail.y, "empty", 0)
+    return true
+}
+
+function tickCrash(board)
+{
+    if ("crashState" in board) {
+        board.crashState ++
+    } else {
+        board.crashState = 0
+    }
+    const crashState = intdiv(board.crashState, 2)
+    for (var bodyPart of board.snake) {
+        setCellState(board, bodyPart.x, bodyPart.y, (crashState % 2) ? "snake" : "empty", 0)
+    }
+    if (crashState >= 6) {
+        return false
+    }
+    return true
+}
+
+function opositeDirections(dir1, dir2)
+{
+    if (dir1.x + dir2.x == 0 && dir1.y + dir2.y == 0) {
+        return true
+    } else {
+        return false
+    }
+}
+
+function tickRun(board)
+{
     const snakeHead = board.snake[board.snake.length - 1]
     const nextHead = {"x": snakeHead.x + board.nextDirection.x, "y": snakeHead.y + board.nextDirection.y}
     if (nextHead.x < 0 || nextHead.x >= board.x || nextHead.y < 0 || nextHead.y >= board.y) {
-        return false
+        board.state = "crash"
+        return true
     }
     const nextCell = board.board[nextHead.y][nextHead.x]
-    if (nextCell.type == 'wall') {
-        return false
+    if (nextCell.type == 'wall' || nextCell.type == 'snake') {
+        board.state = "crash"
+        return true
     }
+    var everythingEaten = false
     if (nextCell.growFactor >= 9) {
-        return false
+        everythingEaten = true
     }
     board.growFactor += nextCell.growFactor
     board.snake.push(nextHead)
     board.prevDirection = board.nextDirection
+    if (board.directionStack !== null) {
+        if (!opositeDirections(board.nextDirection, board.directionStack)){
+            board.nextDirection = board.directionStack
+        }
+        board.directionStack = null
+    }
     var nextGrowFactor = 0
     if (nextCell.growFactor > 0) {
         nextGrowFactor = nextCell.growFactor + 1
@@ -100,8 +159,11 @@ function tick(board)
         const snakeTail = board.snake.shift()
         setCellState(board, snakeTail.x, snakeTail.y, "empty", 0)
     }
-    if (nextGrowFactor > 0) {
+    if (!everythingEaten && nextGrowFactor > 0) {
         placeRandomPrey(board, nextGrowFactor)
+    }
+    if (everythingEaten) {
+        board.state = "done"
     }
     return true
 }
@@ -112,6 +174,8 @@ function setDirection(board, dir)
     const y = board.prevDirection.y + dir.y
     if (x != 0 || y != 0) {
         board.nextDirection = dir
+    } else {
+        board.directionStack = dir
     }
 }
 
@@ -148,5 +212,5 @@ $(document).ready(function() {
         if (!tick(state)) {
             clearInterval(interval)
         }
-    }, 100)
+    }, 150)
 })
