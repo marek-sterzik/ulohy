@@ -416,7 +416,7 @@ function getDirection(keycode)
 }
 
 $(document).ready(function() {
-    template = {"width": 30, "height": 30, "links": links.projectivePlane, "flipDirections": true, "walls": "<4,4>-RD+"}
+    template = {"width": 30, "height": 30, "snakeX": 15, "snakeY": 14, "links": links.projectivePlane, "flipDirections": true, "walls": "<4,0>+<25,29>"}
     var state = createSnakeboard($('table.snakeboard'), template)
     $(document).on("keydown", function(ev){
         if (keyPress(state, ev.which)) {
