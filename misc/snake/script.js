@@ -15,13 +15,6 @@ const links = {
     "projectivePlane": {"v": "flipped", "h": "flipped"},
 }
 
-function setCellStateOld(board, x, y, state, growFactor)
-{
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Already refactored
-
 function intdiv(a, b)
 {
     return (a - a%b)/b
